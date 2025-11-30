@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Página de Login</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="logo-row">
+      <img src="img/Logo_Accor.png" alt="Accor" class="accor-logo">
+      <div class="brand-logos">
+        <img src="img/Ibis.png" alt="Ibis" class="hotel-logo">
+        <img src="img/Ibis-budget.png"Ibis Budget" class="hotel-logo">
+        <img src="img/Mercure.png" alt="Mercure" class="hotel-logo">
+      </div>
+    </div>
+  </header>
+
+  <main class="card login-card">
+    <h1>Página de Login</h1>
+
+    <!-- usuário visível (Tricombo) por padrão, mas campo editável para permitir login do Administrador -->
+    <label class="label">Usuário</label>
+    <input id="username" type="text" placeholder="Tricombo" value="Tricombo" autocomplete="username" />
+
+    <label class="label">Senha</label>
+    <input id="password" type="password" placeholder="Senha" autocomplete="current-password" />
+
+    <div class="actions">
+      <button id="btnLogin">Entrar</button>
+    </div>
+
+    <p id="msg" class="msg"></p>
+
+    <p class="hint">Usuário padrão: <strong>Tricombo</strong></p>
+  </main>
+
+  <footer class="site-footer">
+    <small>Tricombo — Accor © 2025</small>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // login handler: verifica credenciais ofuscadas e redireciona conforme role
+    document.getElementById("btnLogin").addEventListener("click", () => {
+      const u = (document.getElementById("username").value || "").trim();
+      const p = (document.getElementById("password").value || "").trim();
+
+      if (!u || !p) {
+        showMsg("Preencha usuário e senha.", "error");
+        return;
+      }
+
+      // cred check via base64-stored secrets in script.js
+      const role = checkCredentials(u, p); // returns "func" | "adm" | null
+      if (!role) {
+        showMsg("Usuário ou senha inválidos.", "error");
+        return;
+      }
+
+      // store role and user
+      sessionStorage.setItem("loggedRole", role);
+      sessionStorage.setItem("loggedUser", u.toLowerCase());
+      // redirect
+      if (role === "adm") window.location.href = "admin.html";
+      else window.location.href = "usuario.html";
+    });
+
+    function showMsg(text, type){
+      const el = document.getElementById("msg");
+      el.textContent = text;
+      el.className = "msg " + (type === "error" ? "msg-error" : "msg-ok");
+    }
+  </script>
+</body>
+</html>
