@@ -11,9 +11,9 @@
     <div class="logo-row">
       <img src="img/Logo_Accor.png" alt="Accor" class="accor-logo">
       <div class="brand-logos">
-        <img src="/img/Ibis.png" alt="Ibis" class="hotel-logo">
-        <img src="/img/Ibis-budget.png" alt="Ibis Budget" class="hotel-logo">
-        <img src="/img/Mercure.png" alt="Mercure" class="hotel-logo">
+        <img src="img/Ibis.png" alt="Ibis" class="hotel-logo">
+        <img src="img/Ibis-budget.png" alt="Ibis Budget" class="hotel-logo">
+        <img src="img/Mercure.png" alt="Mercure" class="hotel-logo">
       </div>
     </div>
   </header>
@@ -25,8 +25,8 @@
     <input id="valor" type="text" placeholder="Ex: 4.171,50" />
 
     <div class="actions">
-      <button onclick="calcularAdmin()">Calcular</button>
-      <button class="ghost" onclick="logout()">Sair</button>
+      <button type="button" onclick="calcularAdmin()">Calcular</button>
+      <button type="button" class="ghost" onclick="logout()">Sair</button>
     </div>
 
     <div id="resultado" class="resultado"></div>
@@ -38,15 +38,15 @@
 
   <script src="script.js"></script>
   <script>
-    // proteger acesso
     const role2 = sessionStorage.getItem("loggedRole");
-    if (!role2 || (role2 !== "adm" && role2 !== "func")) window.location.href = "index.html";
+    if (role2 !== "adm") {
+      window.location.href = "index.html";
+    }
 
-    function calcularAdmin(){
+    function calcularAdmin() {
       const resp = calcularFluxoGeralForView();
       if (!resp) return;
 
-      // show full details
       let html = `
         <h3>Valores Iniciais</h3>
         <div class="linha"><span>Y (com ISS):</span> <span class="valor">${resp.formatR(resp.Y)}</span></div>
@@ -60,20 +60,20 @@
 
       if (resp.ajuste) {
         html += `
-          <hr/>
+          <hr>
           <h3>Ajuste necessário</h3>
           <div class="linha destaque"><span>Ajustar complemento:</span> <span class="valor">${resp.ajuste.sign} ${resp.formatR(resp.ajuste.delta)}</span></div>
           <div class="linha"><span>Novo complemento:</span> <span class="valor">${resp.formatR(resp.ajuste.newB)}</span></div>
           <div class="linha"><span>Prova real ajustada:</span> <span class="valor">${resp.formatR(resp.ajuste.fluxo.PR)}</span></div>
         `;
       } else {
-        html += `<p class="ok">✅ PROVA_REAL já bate com X. Nenhum ajuste necessário.</p>`;
+        html += `<p class="msg-ok">✅ PROVA_REAL já bate com X. Nenhum ajuste necessário.</p>`;
       }
 
       document.getElementById("resultado").innerHTML = html;
     }
 
-    function logout(){
+    function logout() {
       sessionStorage.clear();
       window.location.href = "index.html";
     }
